@@ -1,0 +1,755 @@
+			Ex-1(a) Build a circuit on Breadboard – LED Display
+
+Code:
+int led = 13;
+void setup() {
+  pinMode(led, OUTPUT);
+}
+void loop() {
+  digitalWrite(led, HIGH);   
+  delay(500);               
+  digitalWrite(led, LOW);   
+  delay(500);              
+}
+
+
+			Ex-1(b) Intensity Measurements (Dawn to Dusk)
+
+Code:
+const int ledPin=10;
+const int ldrPin=A5;
+void setup(){
+  Serial.begin(9600);
+  pinMode(ledPin,OUTPUT);
+  pinMode(ldrPin,INPUT);
+}
+void loop(){
+  int ldrstatus=analogRead(ldrPin);
+  if(ldrstatus<=300)
+   {
+    digitalWrite(ledPin,HIGH);
+    Serial.println(ldrstatus,"LED is ON");
+   }
+  else
+   {
+    digitalWrite(ledPin,LOW);
+    Serial.println(ldrstatus,"LED is OFF");
+   }
+}
+
+
+
+			Ex-1(c) Human Detection
+Code:
+int led=13; 
+int pir=2;
+int pirState=LOW;
+int val=0;
+void setup() {
+  pinMode(led,OUTPUT);
+ pinMode(pir,INPUT);
+ Serial.begin(9600);
+}
+void loop() {
+val=digitalRead(pir);
+if(val==HIGH)
+{
+  digitalWrite(led,HIGH);
+  if(pirState==LOW)
+  {
+    Serial.println("Motion detected");
+    pirState=HIGH;
+  }
+}
+else
+{
+  digitalWrite(led,LOW);
+  if(pirState==HIGH){
+    Serial.println("Motion Stopped");
+    pirState=LOW;
+  }
+}
+}
+
+
+
+				Ex-2(a) Flex Sensor
+Code:
+const int flexpin=A0;
+const int ledpin=7;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledpin,OUTPUT);
+}
+
+void loop() {
+  int flexvalue=analogRead(flexpin);
+  Serial.print("Sensor :");
+  Serial.println(flexvalue);
+  if(flexvalue>900)
+  {
+    digitalWrite(ledpin,HIGH);
+    Serial.println("LED is ON");
+    Serial.println("Flex is bend");
+  }
+  else
+  {
+    digitalWrite(ledpin,LOW);
+    Serial.println("LED is OFF");
+    Serial.println("Flex is straight");
+  }
+  delay(2000);
+}
+
+
+			Ex-2(b) Wet measurement – Soil Moisture Sensor
+
+Code:
+int sens=A0; 
+
+void setup() {
+Serial.begin(9600);
+pinMode(LED_BUILTIN,OUTPUT);
+pinMode(sens,INPUT);
+}
+
+void loop() {
+int s=analogRead(sens);
+Serial.print("sensor value is");
+Serial.println(s);
+if(s<1000) 
+{
+  digitalWrite(LED_BUILTIN,LOW);
+  delay(1000);
+  Serial.println("Water Content is present, Resistance is low and LED does not blink");
+}
+else 
+{
+  digitalWrite(LED_BUILTIN,HIGH);
+}
+Serial.println("Water Content is not present, Resistance is high and LED blinks");
+}
+
+
+				Ex-2(c) Sound Control
+
+PROGRAM:
+const int soundPin = 8;
+const int threshold = 300;
+void setup() {
+  Serial.begin(9600);
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(soundPin, INPUT);
+}
+void loop() {
+  int soundSens = analogRead(soundPin);
+  Serial.println(soundSens);
+  if(soundSens >= threshold)
+  {
+    digitalWrite(LED_BUILTIN, HIGH);
+    Serial.println("Noise is high!");
+  }
+  else
+  {
+    digitalWrite(LED_BUILTIN, LOW);
+    Serial.println("Noise is low.");
+  }
+  delay(500);
+}
+
+
+			Ex-2(d) Load Monitoring
+
+PROGRAM:
+#include<HX711_ADC.h>
+#include<Wire.h>
+HX711_ADC LoadCell(4,5);
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(9600);
+  LoadCell.begin();
+  LoadCell.start(2000);
+  LoadCell.setCalFactor(999.0);
+}
+void loop() {
+  LoadCell.update();
+  float load= LoadCell.getData();
+  Serial.print("Load: ");
+  Serial.println(load);
+  if(load > 120)
+  {
+    digitalWrite(LED_BUILTIN, HIGH);
+    Serial.println("Over weight");
+  }
+  else
+  {
+    digitalWrite(LED_BUILTIN, LOW);
+    Serial.println("OK");
+  }
+  delay(1000);
+}
+
+			Ex-3(a) Temperature and Humidity Measurement
+
+PROGRAM:
+
+#include "DHT.h"
+DHT dht(4,11);
+void setup(void) {
+  dht.begin();
+  Serial.begin(9600);
+  Serial.println("Humidity and Temperature\n\n");
+  delay(700);
+}
+void loop() {
+  float h=dht.readHumidity();
+  float t=dht.readTemperature();
+  Serial.print("Current humidity: ");
+  Serial.println(h);
+  Serial.print("Current Temperature: ");
+  Serial.print(t);
+  Serial.println("C");
+  delay(1000);
+}
+
+			Ex-3(b) Signal Variance – Potentiometer
+
+PROGRAM:
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int sensorValue=analogRead(A0);
+  Serial.println(sensorValue);
+  delay(500);
+}
+
+			Ex-3(c) Fire Alarm Indication using Buzzer
+
+PROGRAM:
+
+const int buzzerPin=12;
+const int flamePin=11;
+int Flame=HIGH;
+void setup() {
+  pinMode(buzzerPin,OUTPUT);
+  pinMode(flamePin,INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  Flame=digitalRead(flamePin);
+  if(Flame==LOW){
+    digitalWrite(buzzerPin,HIGH);
+  }
+  
+  else{
+    digitalWrite(buzzerPin,HIGH);
+  }
+}
+
+                              
+
+`			Ex-4(a) IR Temperature Sensor
+ 
+PROGRAM: 
+int sensorPin=A0;
+void setup() {
+  Serial.begin(9600);
+  }
+
+void loop() {
+  int reading=analogRead(sensorPin);
+  float voltage=reading*5.0;
+  voltage = voltage/1024.0;
+  Serial.print(voltage);
+  Serial.println(" volts");
+  Serial.println();
+  float temperatureC=(voltage-0.5)*100;
+  Serial.print(temperatureC);
+  Serial.println(" degree C");
+  Serial.println();
+  float temperatureF=(temperatureC*9.0/5.0)+32.0;
+  Serial.print(temperatureF);
+  Serial.println(" degree F");
+  Serial.println();
+  delay(1000);
+}
+
+
+				Ex-4(b) Gas Leakage Detection 
+
+PROGRAM:
+
+int redLed=12;
+int greenLed=11;
+int buzzer=10;
+int smokeA0=A0;
+int sensorThres=400;
+
+void setup() {
+  pinMode(redLed,OUTPUT);
+  pinMode(greenLed,OUTPUT);
+  pinMode(buzzer,OUTPUT);
+  pinMode(smokeA0,INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int analogSensor=analogRead(smokeA0);
+  if(analogSensor > sensorThres)
+  {
+    digitalWrite(redLed,HIGH);
+    digitalWrite(greenLed,LOW);
+    tone(buzzer,1000,200);
+    Serial.print(" Gas Leak Detected:");
+  Serial.print(" ");
+  Serial.println(analogSensor);
+  }
+  else
+  {
+     Serial.print(" No Gas Leak Detected:");
+  Serial.print(" ");
+  Serial.println(analogSensor);
+    digitalWrite(redLed,LOW);
+    digitalWrite(greenLed,HIGH);
+    noTone(buzzer);
+  }
+delay(1000);
+}
+
+				Ex-5(a) Light Control Monitoring
+
+PROGRAM
+ex5a.ino
+#include<ESP8266WiFi.h>
+#include<WiFiClient.h>
+#include<ThingSpeak.h>
+const char* ssid="Redmi";
+const char* password="abc57567";
+WiFiClient client;
+unsigned long myChannelNumber=2060046;
+const char* myWriteAPIkey="ORSABUMNJ418GO6Y";
+const char* myReadAPIkey="TJ4RN0WC0GNXUY86";
+int led_1;
+int ir1=D0;
+int led1=D5;
+int ldr=A0;
+int val=0;
+void setup() {
+Serial.begin(9600);
+delay(10);
+pinMode(ir1,INPUT);
+pinMode(led1,OUTPUT);
+WiFi.begin(ssid,password);
+ThingSpeak.begin(client);
+}
+void loop(){
+int s1=digitalRead(ir1);
+val=analogRead(ldr);
+Serial.print(s1);
+Serial.print(":");
+Serial.print(val);
+if(val<800)
+{
+if(s1==0)
+{
+digitalWrite(led1,LOW);
+}
+else
+{
+digitalWrite(led1,HIGH);
+}
+}
+else
+{
+digitalWrite(led1,LOW);
+}
+ThingSpeak.writeField(myChannelNumber,1,val,myWriteAPIkey);
+ThingSpeak.writeField(myChannelNumber,2,s1,myWriteAPIkey);
+ThingSpeak.writeField(myChannelNumber,3,led1,myWriteAPIkey);
+led_1=ThingSpeak.readIntField(myChannelNumber,3,myReadAPIkey);
+if(led_1==1)
+{
+digitalWrite(led1,HIGH);
+}
+else{
+digitalWrite(led1,LOW);
+}
+}
+
+
+
+				Ex-5(b) Soil Condition Monitoring
+
+#include<ESP8266WiFi.h>
+#include<WiFiClient.h>
+#include<ThingSpeak.h>
+const char* ssid="vivo";
+const char* password="123456";
+WiFiClient client;
+unsigned long myChannelNumber=2064299;
+const char* myWriteAPIkey="UPT4FMODG4GNTQRO";
+const char* myReadAPIkey="MCZM9ZK2US5ESYG9";
+
+void setup() {
+  Serial.begin(9600);
+  delay(100);
+  pinMode(A0,INPUT);
+  WiFi.begin(ssid,password);
+  ThingSpeak.begin(client);
+}
+void loop(){
+  int s1=analogRead(A0);
+  Serial.print("Reading: ");
+  Serial.println(s1);
+  if(s1<4)
+  {
+    Serial.println("Water is enough");
+  }
+  else
+  {
+    Serial.println("Water is not enough");
+  }
+  delay(1000);
+  ThingSpeak.writeField(myChannelNumber,1,s1,myWriteAPIkey);
+}
+
+
+				Ex-5(c) Human Detection using PIR sensor
+
+#include<ESP8266WiFi.h>
+#include<WiFiClient.h>
+#include<ThingSpeak.h>
+
+const char*ssid=“vivo";
+const char*password="123456";
+WiFiClient client;
+unsigned long myChannelNumber= 2064421;
+const char *myWriteAPIKey="OP0HJ32IJQKB4BM1";
+const char *myReadAPIKey="VRAS8YZPSX209SJE";
+
+const int PIRpin=A0;
+const int LEDpin=D4;
+int val,led_1;
+void setup() {
+  Serial.begin(9600);
+  pinMode(PIRpin,INPUT);
+  pinMode(LEDpin,OUTPUT);
+  WiFi.begin(ssid,password);
+  ThingSpeak.begin(client);
+}
+
+void loop() {
+  val=analogRead(PIRpin);
+  Serial.print("PIR Value:");
+  Serial.print(val);
+  if(val>200)
+  {
+    Serial.println("Motion Detected");
+    digitalWrite(LEDpin,HIGH);
+  }
+  else
+  {
+    Serial.println("Motion not Detected");
+    digitalWrite(LEDpin,LOW);
+  }
+  delay(1000);
+  ThingSpeak.writeField(myChannelNumber,1,val, myWriteAPIKey);
+  ThingSpeak.writeField(myChannelNumber,2,LEDpin,myWriteAPIKey);
+}
+
+
+					Ex-6(a) Servo Motor Control using Raspberry Pi
+
+Program:
+import RPi.GPIO as GPIO
+import time
+
+PWM_PIN = 13
+PWM_FREQ = 50
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(PWM_PIN, GPIO.OUT)
+servo = GPIO.PWM(PWM_PIN, PWM_FREQ)
+
+servo.start(0)
+print('Servo started')
+print('Waiting for 2 seconds')
+time.sleep(2)
+print('Rotating 180 degrees in 10 steps')
+duty = 2
+
+while duty <= 12:
+    servo.ChangeDutyCycle(duty)
+    time.sleep(1)
+    duty=duty + 1
+time.sleep(2)
+print('Turning back to 90 degrees')
+servo.ChangeDutyCycle(7)
+time.sleep(2)
+print('Turning back to 0 degrees')
+servo.ChangeDutyCycle(2)
+time.sleep(0.5)
+servo.ChangeDutyCycle(0)
+servo.stop()
+GPIO.cleanup()
+print("Goodbye")
+
+
+							Ex-6(b) Face Recognition
+
+Program: Face Recognition 
+import cv2
+from simple_facerec import SimpleFacerec
+
+# Encode faces from a folder
+sfr = SimpleFacerec()
+sfr.load_encoding_images("images/")
+ 
+# Load Camera
+cap = cv2.VideoCapture(0)
+while True:
+    ret, frame = cap.read()
+
+     # Detect Faces
+    face_locations, face_names = sfr.detect_known_faces(frame)
+    for face_loc, name in zip(face_locations, face_names):
+        y1, x2, y2, x1 = face_loc[0], face_loc[1], face_loc[2], face_loc[3]
+       cv2.putText(frame, name,(x1, y1 - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 200), 2)
+       cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 200), 4)
+       cv2.imshow("Frame", frame)
+ 
+    key = cv2.waitKey(1)
+    if key == 27:
+        break
+cap.release()
+cv2.destroyAllWindows()
+Program: Face detection
+import cv2
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+# capture frames from a camera
+cap = cv2.VideoCapture(0)
+
+# loop runs if capturing has been initialized.
+while 1:
+
+	# reads frames from a camera
+	ret, img = cap.read()
+
+	# convert to gray scale of each frames
+	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+	# Detects faces of different sizes in the input image
+	faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+	for (x,y,w,h) in faces
+		cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+	# Display an image in a window
+	cv2.imshow('img',img)
+
+	# Wait for Esc key to stop
+	k = cv2.waitKey(30) & 0xff
+	if k == 27:
+		break
+# Close the window
+cap.release()
+
+# De-allocate any associated memory usage
+cv2.destroyAllWindows()
+
+							Ex-6(c) RFID
+
+Program:
+#include <require_cpp11.h>
+#include <MFRC522.h>
+#include <deprecated.h>
+#include <MFRC522Extended.h>
+
+#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 53
+#define RST_PIN 5
+
+MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
+
+MFRC522::MIFARE_Key key; 
+
+// Init array that will store new NUID 
+byte nuidPICC[4];
+
+void setup() { 
+  Serial.begin(9600);
+  SPI.begin(); // Init SPI bus
+  rfid.PCD_Init(); // Init MFRC522 
+
+  for (byte i = 0; i < 6; i++) {
+    key.keyByte[i] = 0xFF;
+  }
+}
+ 
+void loop() {
+String content="";
+  // Look for new cards
+  if ( ! rfid.PICC_IsNewCardPresent())
+    return;
+
+  // Verify if the NUID has been readed
+  if ( ! rfid.PICC_ReadCardSerial())
+    return;
+
+ for (byte i = 0; i < 4; i++) {
+      nuidPICC[i] = rfid.uid.uidByte[i];
+    }
+
+  for (byte i = 0; i < rfid.uid.size; i++) {
+    Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
+    Serial.print(rfid.uid.uidByte[i], HEX);
+    content.concat(String(rfid.uid.uidByte[i] < 0x10 ? " 0" : " "));
+    content.concat(String(rfid.uid.uidByte[i],HEX));
+  }
+   
+    
+    Serial.println();
+    content.toUpperCase();
+    Serial.println(content);
+    if(content.substring(1)=="6A 38 A3 89")
+    {
+      Serial.println("Authorised Access");
+      Serial.println();
+      delay(3000);  
+    }
+    else
+    {
+     Serial.println("Access Denied");
+      Serial.println();
+      delay(3000);    
+    }
+   
+   rfid.PICC_HaltA();
+  rfid.PCD_StopCrypto1();
+}
+
+
+						Ex-7b Machine Health Monitoring
+
+PROGRAM:
+#include <Wire.h>
+#include "MAX30100_PulseOximeter.h"
+#define REPORTING_PERIOD_MS 1000
+PulseOximeter pox;
+uint32_t tsLastReport = 0;
+void onBeatDetected()
+{
+Serial.println("Beat!");
+}
+void setup()
+{
+Serial.begin(115200);
+Serial.print("Initializing pulse oximeter..");
+// Initialize the PulseOximeter instance
+// Failures are generally due to an improper I2C wiring, missing power supply
+// or wrong target chip
+if (!pox.begin()) {
+Serial.println("FAILED");
+for(;;);
+} else {
+Serial.println("SUCCESS");
+}
+pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
+// Register a callback for the beat detection
+pox.setOnBeatDetectedCallback(onBeatDetected);
+}
+void loop()
+{
+// Make sure to call update as fast as possible
+pox.update();
+if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
+Serial.print("Heart rate:");
+Serial.print(pox.getHeartRate());
+Serial.print("bpm / SpO2:");
+Serial.print(pox.getSpO2());
+Serial.println("%");
+tsLastReport = millis();
+}
+}
+
+
+                
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
